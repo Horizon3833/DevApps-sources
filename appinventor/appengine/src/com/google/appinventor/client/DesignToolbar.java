@@ -359,7 +359,7 @@ public class DesignToolbar extends Toolbar {
     screen.blocksEditor.makeActiveWorkspace();
   }
 
-  private class SwitchToBlocksEditorAction implements Command {
+  public class SwitchToBlocksEditorAction implements Command {
     @Override
     public void execute() {
       if (currentProject == null) {

@@ -32,6 +32,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -40,6 +42,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.user.client.ui.ListBox;
 
 import jsinterop.annotations.JsOverlay;
 import jsinterop.annotations.JsType;
@@ -82,10 +85,13 @@ public class YoungAndroidPalettePanel extends Composite implements SimplePalette
   // Map translated component names to English names
   private final Map<String, String> translationMap;
 
+  private final HorizontalPanel searchPanel;
   private final TextBox searchText; 
+  private final Label searchIcon;
   private final VerticalPanel searchResults;
   private JsArrayString arrayString = (JsArrayString) JsArrayString.createArray();
   private String lastSearch = "";
+  public ListBox componentBox;
   private Map<String, SimplePaletteItem> searchSimplePaletteItems =
       new HashMap<String, SimplePaletteItem>();
 
@@ -156,6 +162,12 @@ public class YoungAndroidPalettePanel extends Composite implements SimplePalette
     COMPONENT_DATABASE = SimpleComponentDatabase.getInstance(editor.getProjectId());
 
     stackPalette = new StackPanel();
+    componentBox = new ListBox() {
+      @Override
+      protected void onLoad() {
+        componentBox.setStylePrimaryName("ode-ComponentBox");
+      }
+    };
 
     paletteHelpers = new HashMap<ComponentCategory, PaletteHelper>();
     // If a category has a palette helper, add it to the paletteHelpers map here.
@@ -167,6 +179,7 @@ public class YoungAndroidPalettePanel extends Composite implements SimplePalette
 
     translationMap = new HashMap<String, String>();
     panel = new VerticalPanel();
+    panel.setStylePrimaryName("ode-StackPaletteHome");
     panel.setWidth("100%");
 
     for (String component : COMPONENT_DATABASE.getComponentNames()) {
@@ -175,10 +188,16 @@ public class YoungAndroidPalettePanel extends Composite implements SimplePalette
       translationMap.put(translationName, component);
     }
 
+    searchPanel = new HorizontalPanel();
+    searchPanel.setStylePrimaryName("ode-SearchPanel");
+    searchIcon = new Label("search");
+    searchIcon.setStylePrimaryName("ode-SearchIcon");
+    searchPanel.add(searchIcon);
     searchText = new TextBox();
     searchText.setWidth("100%");
     searchText.getElement().setPropertyString("placeholder", MESSAGES.searchComponents());
-    searchText.getElement().setAttribute("style", "width: 100%; box-sizing: border-box;");
+    searchText.getElement().setAttribute("style", "width: 170px; border: none; box-shadow: none;");
+    searchText.setStylePrimaryName("ode-SearchBtn");
 
     searchText.addKeyUpHandler(new SearchKeyUpHandler());
     searchText.addKeyPressHandler(new ReturnKeyHandler());
@@ -195,9 +214,10 @@ public class YoungAndroidPalettePanel extends Composite implements SimplePalette
         doSearch();
       }
     });
+    searchPanel.add(searchText);
 
     panel.setSpacing(3);
-    panel.add(searchText);
+    panel.add(searchPanel);
     panel.setWidth("100%");
 
     searchResults = new VerticalPanel();
@@ -205,6 +225,7 @@ public class YoungAndroidPalettePanel extends Composite implements SimplePalette
     stackPalette.setWidth("100%");
 
     initWidget(panel);
+    panel.add(componentBox);
     panel.add(searchResults);
     panel.add(stackPalette);
 
@@ -220,8 +241,16 @@ public class YoungAndroidPalettePanel extends Composite implements SimplePalette
           MESSAGES.extensionComponentPallette() :
           ComponentsTranslation.getCategoryName(category.getName());
         stackPalette.add(categoryPanel, title);
+        componentBox.addItem(title);
       }
     }
+
+    componentBox.addChangeHandler(new ChangeHandler() {
+      @Override
+      public void onChange(ChangeEvent event) {
+        
+      }
+    });
 
     initExtensionPanel();
   }

@@ -23,92 +23,122 @@
     <meta HTTP-EQUIV="pragma" CONTENT="no-cache"/>
     <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate"/>
     <meta HTTP-EQUIV="expires" CONTENT="0"/>
-    <title>MIT App Inventor</title>
-  </head>
-<body>
-  <center>
-    <h1>${pleaselogin}</h1>
-  </center>
-<% if (error != null) {
-out.println("<center><font color=red><b>" + error + "</b></font></center><br/>");
-   } %>
-<form method=POST action="/login">
-<center><table>
-<tr><td>${emailAddressLabel}</td><td><input type=text name=email value="" size="35"></td></tr>
-<tr><td></td></td>
-<tr><td>${passwordLabel}</td><td><input type=password name=password value="" size="35"></td></tr>
-</table></center>
-<% if (locale != null && !locale.equals("")) {
-   %>
-<input type=hidden name=locale value="<%= locale %>">
-<% }
-   if (repo != null && !repo.equals("")) {
-   %>
-<input type=hidden name=repo value="<%= repo %>">
-<% }
-   if (autoload != null && !autoload.equals("")) {
-   %>
-<input type=hidden name=autoload value="<%= autoload %>">
-<% }
-   if (galleryId != null && !galleryId.equals("")) {
-   %>
-<input type=hidden name=galleryId value="<%= galleryId %>">
-<% }
-   if (newGalleryId != null && !newGalleryId.equals("")) {
-   %>
-<input type=hidden name=ng value="<%= newGalleryId %>">
-<% } %>
-<% if (redirect != null && !redirect.equals("")) {
-   %>
-<input type=hidden name=redirect value="<%= redirect %>">
-<% } %>
-<p></p>
-<center><input type=Submit value="${login}" style="font-size: 300%;"></center>
-</form>
-<p></p>
-<center><p><a href="/login/sendlink"  style="text-decoration:none;">${passwordclickhereLabel}</a></p></center>
-<%    if (useGoogleLabel != null && useGoogleLabel.equals("true")) { %>
-<center><p><a href="<%= new UriBuilder("/login/google")
-                              .add("locale", locale)
-                              .add("autoload", autoload)
-                              .add("repo", repo)
-                              .add("galleryId", galleryId)
-                              .add("ng", newGalleryId)
-                              .add("redirect", redirect).build() %>" style="text-decoration:none;">Click Here to use your Google Account to login</a></p></center>
-<%    } %>
-<footer>
-<center><a href="<%= new UriBuilder("/login")
-                           .add("locale", "zh_CN")
-                           .add("repo", repo)
-                           .add("autoload", autoload)
-                           .add("galleryId", galleryId)
-                           .add("redirect", redirect).build() %>"  style="text-decoration:none;" >中文</a>&nbsp;
-<a href="<%= new UriBuilder("/login")
-                           .add("locale", "pt")
-                           .add("repo", repo)
-                           .add("autoload", autoload)
-                           .add("galleryId", galleryId)
-                           .add("redirect", redirect).build() %>"  style="text-decoration:none;" >Português</a>&nbsp;
-<a href="<%= new UriBuilder("/login")
-                   .add("locale", "en")
-                   .add("repo", repo)
-                   .add("autoload", autoload)
-                   .add("galleryId", galleryId)
-                   .add("ng", newGalleryId)
-                   .add("redirect", redirect).build() %>"  style="text-decoration:none;" >English</a></center>
-<p></p>
-<center>
-<%    if (locale != null && locale.equals("zh_CN")) { %>
-<a href="http://www.weibo.com/mitappinventor" target="_blank"><img class="img-scale"
-                  src="/static/images/mzl.png" width="30" height="30" title="Sina WeiBo"></a>&nbsp;
-<%    } %>
-<a href="http://www.appinventor.mit.edu" target="_blank"><img class="img-scale"
-                src="/static/images/login-app-inventor.jpg" width="50" height="30" title="MIT App Inventor"></a></center>
-<p></p>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap" rel="stylesheet"> 
+    <style>
+       a:link {
+  color: #999999;
+  background-color: transparent;
+  text-decoration: none;
+}
 
-<p style="text-align: center; clear:both;"><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"
-                                              target="_blank"><img alt="Creative Commons License" src="/static/images/cc3.png"></a> <br>
-  <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/" target="_blank"></a></p>
-</footer>
+a:visited {
+  color: #999999;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #999999;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:active {
+  color: #999999;
+  background-color: transparent;
+  text-decoration: none;
+}
+.button {
+   border-radius: 5px; background-color: white; border: 1px solid #999999; width: 150px; height: 37px;
+        cursor: pointer; padding: 10px; color: black;
+      }
+
+.signIn:hover{
+  background-color: #999999;
+}
+.signIn{
+  background-color: #999999;
+  width: 150px; height: 37px;
+}
+
+.button:hover{
+  background-color: #d3d3d3;
+}
+
+    </style>
+
+    <title>Sign In - DevApps</title>
+  </head>
+<body style="background-color: #ffffff;"> 
+
+   <center>
+      <section style="width: 350px;
+      border: 1px solid #ddd;  
+      box-shadow: 0 2px 15px #ccc;
+      border-radius: 5px;
+      padding: 20px 30px 30px;
+      padding-bottom: 3px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;">
+      <h2 style="font-family: open sans; color: #000; text-align: left;">Welcome Back</h2>
+      <% if (error != null) {
+        out.println("<center><font color=red><b>" + error + "</b></font></center><br/>");
+           } %>
+           <form method=POST action="/login">
+            <center><table>
+            <tr><td><input type=text name="email" style="padding: 4px; padding-left: 12px; font-size: 17px; border: 1px solid #999999; border-radius: 5px; background-color: #ffffff; width: 330px; height: 37px; color: black;" placeholder="Email" value=""></td></tr>
+            <tr><td></td></td>
+              <tr><td><input type=password name="password" style="padding: 4px; padding-left: 12px; font-size: 17px; border: 1px solid #999999; border-radius: 5px; background-color: #ffffff; width: 330px; height: 37px; color: black;" placeholder="Password" value=""></td></tr>
+            </table></center>
+            <center><p style="padding-left: 7px; text-align: left; background-color: white;" width="380px"><a href="/login/sendlink">Forget Password?</a></p></center>
+            <% if (locale != null && !locale.equals("")) {
+               %>
+            <input type=hidden name=locale value="<%= locale %>">
+            <% }
+               if (repo != null && !repo.equals("")) {
+               %>
+            <input type=hidden name=repo value="<%= repo %>">
+            <% }
+               if (autoload != null && !autoload.equals("")) {
+               %>
+            <input type=hidden name=autoload value="<%= autoload %>">
+            <% }
+               if (galleryId != null && !galleryId.equals("")) {
+               %>
+            <input type=hidden name=galleryId value="<%= galleryId %>">
+            <% }
+               if (newGalleryId != null && !newGalleryId.equals("")) {
+               %>
+            <input type=hidden name=ng value="<%= newGalleryId %>">
+            <% } %>
+            <% if (redirect != null && !redirect.equals("")) {
+               %>
+            <input type=hidden name=redirect value="<%= redirect %>">
+            <% } %>
+            <p></p>
+            <center><input type="Submit" class="signIn" value="Sign In" style="font-family: open sans; font-size: 17px; border-radius: 5px; background-color: white; border: 1px solid #999999; width: 150px; height: 37px;"></center>
+            </form>
+            <p></p>
+            <p style="font: size 15px; background-color: white;">OR</p>
+          <p style="height: 2px;"></p>  
+            <%    if (useGoogleLabel != null && useGoogleLabel.equals("true")) { %>
+              <center><p><a href="<%= new UriBuilder("/login/google")
+                                            .add("locale", locale)
+                                            .add("autoload", autoload)
+                                            .add("repo", repo)
+                                            .add("galleryId", galleryId)
+                                            .add("ng", newGalleryId)
+                                            .add("redirect", redirect).build() %>" class="button" style="font-size: 15px; color: black; font-family: open sans;">Login With Google</a></p></center><%    } %>
+
+            <p style="height: 15px;"></p>                               
+           <center><p style="text-align: center; background-color: white;" width="380px"><a href="/login/sendlink">Don't have account? Create New</a></p></center>
+
+    
+    
+    </section>  </center>  
+
 </body></html>
 

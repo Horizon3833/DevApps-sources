@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ public final class SimpleVisibleComponentsPanel extends Composite implements Dro
   private final ListBox listboxPhonePreview; // A ListBox for Holo/Material/iOS preview styles
   private final int[][] drop_lst = { {320, 505}, {480, 675}, {768, 1024} };
   private final String[] drop_lst_phone_preview = { "Android Material", "Android Holo", "iOS" };
+  private final HorizontalPanel listContainer;
 
   // Corresponding panel for non-visible components (because we allow users to drop
   // non-visible components onto the form, but we show them in the non-visible
@@ -62,6 +64,7 @@ public final class SimpleVisibleComponentsPanel extends Composite implements Dro
     // Initialize UI
     phoneScreen = new VerticalPanel();
     phoneScreen.setStylePrimaryName("ode-SimpleFormDesigner");
+    listContainer = new HorizontalPanel();
 
     checkboxShowHiddenComponents = new CheckBox(MESSAGES.showHiddenComponentsCheckbox()) {
       @Override
@@ -93,7 +96,7 @@ public final class SimpleVisibleComponentsPanel extends Composite implements Dro
         }
       }
     });
-    phoneScreen.add(checkboxShowHiddenComponents);
+   listContainer.add(checkboxShowHiddenComponents);
 
     listboxPhoneTablet = new ListBox() {
       @Override
@@ -110,7 +113,7 @@ public final class SimpleVisibleComponentsPanel extends Composite implements Dro
         }
       }
     };
-    listboxPhoneTablet.addItem("Phone size");
+    listboxPhoneTablet.addItem("Pixel 3");
     listboxPhoneTablet.addItem("Tablet size");
     listboxPhoneTablet.addItem("Monitor size");
     listboxPhoneTablet.addChangeHandler(new ChangeHandler() {
@@ -127,7 +130,7 @@ public final class SimpleVisibleComponentsPanel extends Composite implements Dro
       }
     });
 
-    phoneScreen.add(listboxPhoneTablet);
+    listContainer.add(listboxPhoneTablet);
 
     listboxPhonePreview = new ListBox() {
       @Override
@@ -158,8 +161,6 @@ public final class SimpleVisibleComponentsPanel extends Composite implements Dro
         changeFormPhonePreview(idx, val);
       }
     });
-
-    phoneScreen.add(listboxPhonePreview);
 
     initWidget(phoneScreen);
   }
@@ -220,15 +221,15 @@ public final class SimpleVisibleComponentsPanel extends Composite implements Dro
 
     String info = " (" + height + "," + width + ")";
     if (idx == 0) {
-      listboxPhoneTablet.setItemText(idx, MESSAGES.previewPhoneSize() + info);
+      listboxPhoneTablet.setItemText(idx, MESSAGES.previewPhoneSize());
       listboxPhoneTablet.setItemText(1, MESSAGES.previewTabletSize());
       listboxPhoneTablet.setItemText(2, MESSAGES.previewMonitorSize());
     } else if (idx == 1) {
-      listboxPhoneTablet.setItemText(idx, MESSAGES.previewTabletSize() + info);
+      listboxPhoneTablet.setItemText(idx, MESSAGES.previewTabletSize());
       listboxPhoneTablet.setItemText(0, MESSAGES.previewPhoneSize());
       listboxPhoneTablet.setItemText(2, MESSAGES.previewMonitorSize());
     } else {
-      listboxPhoneTablet.setItemText(idx, MESSAGES.previewMonitorSize() + info);
+      listboxPhoneTablet.setItemText(idx, MESSAGES.previewMonitorSize());
       listboxPhoneTablet.setItemText(0, MESSAGES.previewPhoneSize());
       listboxPhoneTablet.setItemText(1, MESSAGES.previewTabletSize());
     }

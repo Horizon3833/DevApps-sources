@@ -301,6 +301,6 @@ public class Toolbar extends Composite {
    * @param caption the new caption
    */
   protected void setDropDownButtonCaption(String widgetName, String caption) {
-    dropDownButtonMap.get(widgetName).setText(caption + " " + DROP_DOWN_TRIANGLE);
+    dropDownButtonMap.get(widgetName).setText(caption);
   }
 }

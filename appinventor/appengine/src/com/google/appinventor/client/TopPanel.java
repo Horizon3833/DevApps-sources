@@ -8,6 +8,7 @@ package com.google.appinventor.client;
 
 import com.google.appinventor.client.boxes.MotdBox;
 import com.google.appinventor.client.boxes.ProjectListBox;
+import com.google.appinventor.client.DesignToolbar.SwitchToBlocksEditorAction;
 
 import com.google.appinventor.client.explorer.commands.ChainableCommand;
 import com.google.appinventor.client.explorer.commands.SaveAllEditorsCommand;
@@ -119,7 +120,7 @@ public class TopPanel extends Composite {
 
     // My Projects Link
     TextButton myProjects = new TextButton(MESSAGES.myProjectsTabName());
-    myProjects.setStyleName("ode-TopPanelButton");
+    myProjects.setStyleName("ode-TopPanelIcons");
 
     myProjects.addClickHandler(new ClickHandler() {
       @Override
@@ -129,26 +130,25 @@ public class TopPanel extends Composite {
       }
     });
 
-    myProjects.setStyleName("ode-TopPanelButton");
+    myProjects.setStyleName("ode-TopPanelIcons");
     links.add(myProjects);
 
     // View Trash Link
     TextButton viewTrash = new TextButton(MESSAGES.viewTrashTabName());
-    viewTrash.setStyleName("ode-TopPanelButton");
+    viewTrash.setStyleName("ode-TopPanelIcons");
     viewTrash.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent event) {
         ode.switchToTrash();
       }
     });
-    links.add(viewTrash);
 
     Config config = ode.getSystemConfig();
     String guideUrl = config.getGuideUrl();
     if (!Strings.isNullOrEmpty(guideUrl)) {
       TextButton guideLink = new TextButton(MESSAGES.guideTabName());
       guideLink.addClickHandler(new WindowOpenClickHandler(guideUrl));
-      guideLink.setStyleName("ode-TopPanelButton");
+      guideLink.setStyleName("ode-TopPanelIcons");
       links.add(guideLink);
     }
 
@@ -158,8 +158,7 @@ public class TopPanel extends Composite {
       TextButton feedbackLink = new TextButton(MESSAGES.feedbackTabName());
       feedbackLink.addClickHandler(
         new WindowOpenClickHandler(feedbackUrl));
-      feedbackLink.setStyleName("ode-TopPanelButton");
-      links.add(feedbackLink);
+      feedbackLink.setStyleName("ode-TopPanelIcons");
     }
 
     // Create the Account Information
@@ -178,7 +177,7 @@ public class TopPanel extends Composite {
     userItems.add(new DropDownItem(WIDGET_NAME_DELETE_ACCOUNT, MESSAGES.deleteAccountLink(), new DeleteAccountAction(), "ode-ContextMenuItem-Red"));
 
     accountButton = new DropDownButton(WIDGET_NAME_USER, " " , userItems, true);
-    accountButton.setStyleName("ode-TopPanelButton");
+    accountButton.setStyleName("ode-TopPanelIcons");
 
     // Language
     List<DropDownItem> languageItems = Lists.newArrayList();
@@ -194,8 +193,8 @@ public class TopPanel extends Composite {
     }
     String currentLang = LocaleInfo.getCurrentLocale().getLocaleName();
     String nativeDisplayName = getDisplayName(currentLang);
-    languageDropDown = new DropDownButton(WIDGET_NAME_LANGUAGE, nativeDisplayName, languageItems, true);
-    languageDropDown.setStyleName("ode-TopPanelButton");
+    languageDropDown = new DropDownButton(WIDGET_NAME_LANGUAGE, "translate", languageItems, true);
+    languageDropDown.setStyleName("ode-TopPanelIcons");
 
     account.setVerticalAlignment(VerticalPanel.ALIGN_MIDDLE);
     account.add(links);
@@ -206,8 +205,8 @@ public class TopPanel extends Composite {
 
     // Add the Logo, Tools, Links to the TopPanel
     addLogo(topPanel);
-    topPanel.add(tools);
-    topPanel.add(rightPanel);
+    addToolbar(topPanel, tools);
+    addPanel(topPanel, rightPanel);
     topPanel.setCellVerticalAlignment(rightPanel, HorizontalPanel.ALIGN_MIDDLE);
     rightPanel.setCellHorizontalAlignment(account, HorizontalPanel.ALIGN_RIGHT);
     topPanel.setCellHorizontalAlignment(rightPanel, HorizontalPanel.ALIGN_RIGHT);
@@ -225,6 +224,19 @@ public class TopPanel extends Composite {
     } catch (MissingResourceException e) {
       return nativeName;
     }
+  }
+
+  private void addToolbar(HorizontalPanel panel, TopToolbar toolbar){
+    panel.add(toolbar);
+    panel.setCellHorizontalAlignment(toolbar, HorizontalPanel.ALIGN_RIGHT);
+    panel.setCellVerticalAlignment(toolbar, HorizontalPanel.ALIGN_MIDDLE);
+  }
+
+  private void addPanel(HorizontalPanel panel, VerticalPanel toolbar){
+    panel.add(toolbar);
+    panel.setCellWidth(toolbar, "160px");
+    panel.setCellHorizontalAlignment(toolbar, VerticalPanel.ALIGN_RIGHT);
+    panel.setCellVerticalAlignment(toolbar, VerticalPanel.ALIGN_MIDDLE);
   }
 
   private void addLogo(HorizontalPanel panel) {
@@ -257,7 +269,7 @@ public class TopPanel extends Composite {
    * @param email the email address
    */
   public void showUserEmail(String email) {
-    accountButton.setCaption(email);
+    accountButton.setCaption("account_circle");
   }
 
   /**

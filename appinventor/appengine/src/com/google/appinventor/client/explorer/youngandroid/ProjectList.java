@@ -16,6 +16,7 @@ import com.google.appinventor.shared.rpc.ServerLayout;
 import com.google.gwt.core.client.GWT;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.Window;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -33,6 +34,8 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FocusPanel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -88,13 +91,15 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
     sortOrder = SortOrder.DESCENDING;
 
     // Initialize UI
-    table = new Grid(3, 4); // The table initially contains just the header row.
+    table = new Grid(3, 5); // The table initially contains just the header row.
     table.addStyleName("ode-ProjectTable");
     table.setWidth("100%");
     table.setCellSpacing(0);
     nameSortIndicator = new Label("");
     dateCreatedSortIndicator = new Label("");
+    dateCreatedSortIndicator.addStyleName("ode-ProjectLabels");
     dateModifiedSortIndicator = new Label("");
+    dateModifiedSortIndicator.addStyleName("ode-ProjectLabels");
     refreshSortIndicators();
     selectAllCheckBox = new CheckBox();
     setHeaderRow();
@@ -114,33 +119,9 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
    *
    */
   private void setHeaderRow() {
-    table.getRowFormatter().setStyleName(0, "ode-ProjectHeaderRow");
+    //table.getRowFormatter().setStyleName(0, "ode-ProjectHeaderRow");
+    //table.addRowStyleName("mystyle")
 
-    selectAllCheckBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-      @Override
-      public void onValueChange(ValueChangeEvent<Boolean> event) {
-        boolean isChecked = event.getValue(); // auto-unbox from Boolean to boolean
-        for (Map.Entry<Project, ProjectWidgets> projectWidget : projectWidgets.entrySet()) {
-          if (getProjectCurrentView(projectWidget.getKey()) != Ode.getInstance().getCurrentView()) {
-            continue;
-          }
-          int row = Integer.valueOf(projectWidget.getValue().checkBox.getName());
-          if (isChecked) {
-            if (selectedProjects.contains(projectWidget.getKey())) {
-              continue;
-            }
-            table.getRowFormatter().setStyleName(row, "ode-ProjectRowHighlighted");
-            selectedProjects.add(projectWidget.getKey());
-            projectWidget.getValue().checkBox.setValue(true);
-          } else {
-            table.getRowFormatter().setStyleName(row, "ode-ProjectRowUnHighlighted");
-            selectedProjects.remove(projectWidget.getKey());
-            projectWidget.getValue().checkBox.setValue(false);
-          }
-        }
-        Ode.getInstance().getProjectToolbar().updateButtons();
-      }
-    });
     table.setWidget(0, 0, selectAllCheckBox);
 
     HorizontalPanel nameHeader = new HorizontalPanel();
@@ -149,7 +130,7 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
     nameHeader.add(nameHeaderLabel);
     nameSortIndicator.addStyleName("ode-ProjectHeaderLabel");
     nameHeader.add(nameSortIndicator);
-    table.setWidget(0, 1, nameHeader);
+    //table.setWidget(0, 1, nameHeader);
 
     HorizontalPanel dateCreatedHeader = new HorizontalPanel();
     final Label dateCreatedHeaderLabel = new Label(MESSAGES.projectDateCreatedHeader());
@@ -157,7 +138,7 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
     dateCreatedHeader.add(dateCreatedHeaderLabel);
     dateCreatedSortIndicator.addStyleName("ode-ProjectHeaderLabel");
     dateCreatedHeader.add(dateCreatedSortIndicator);
-    table.setWidget(0, 2, dateCreatedHeader);
+    //table.setWidget(0, 2, dateCreatedHeader);
 
     HorizontalPanel dateModifiedHeader = new HorizontalPanel();
     final Label dateModifiedHeaderLabel = new Label(MESSAGES.projectDateModifiedHeader());
@@ -165,7 +146,7 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
     dateModifiedHeader.add(dateModifiedHeaderLabel);
     dateModifiedSortIndicator.addStyleName("ode-ProjectHeaderLabel");
     dateModifiedHeader.add(dateModifiedSortIndicator);
-    table.setWidget(0, 3, dateModifiedHeader);
+    //table.setWidget(0, 3, dateModifiedHeader);
 
     MouseDownHandler mouseDownHandler = new MouseDownHandler() {
       @Override
@@ -227,34 +208,26 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
   }
 
   private class ProjectWidgets {
-    final CheckBox checkBox;
+    FocusPanel fp;
+    final VerticalPanel homeCard;
+    final FocusPanel commonPanel;
+    final VerticalPanel card;
+    final HorizontalPanel buttonPanel;
     final Label nameLabel;
     final Label dateCreatedLabel;
     final Label dateModifiedLabel;
 
     private ProjectWidgets(final Project project) {
-      checkBox = new CheckBox();
-      checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-        @Override
-        public void onValueChange(ValueChangeEvent<Boolean> event) {
-          boolean isChecked = event.getValue(); // auto-unbox from Boolean to boolean
-          int row = Integer.valueOf(checkBox.getName());
-          if (isChecked) {
-            table.getRowFormatter().setStyleName(row, "ode-ProjectRowHighlighted");
-            selectedProjects.add(project);
-            if (isAllProjectsSelected()) {
-              selectAllCheckBox.setValue(true);
-            }
-          } else {
-            table.getRowFormatter().setStyleName(row, "ode-ProjectRowUnHighlighted");
-            selectedProjects.remove(project);
-            if (selectAllCheckBox.getValue()) {
-              selectAllCheckBox.setValue(false);
-            }
-          }
-          Ode.getInstance().getProjectToolbar().updateButtons();
-        }
-      });
+      fp = new FocusPanel();
+      fp.addStyleName("ode-ProjectListBackground");
+      homeCard = new VerticalPanel();
+      homeCard.addStyleName("ode-HomeCard");
+      commonPanel = new FocusPanel();
+      commonPanel.addStyleName("ode-CommonPanel");
+      buttonPanel = new HorizontalPanel();
+      buttonPanel.addStyleName("ode-CardButtonPanel");
+      card = new VerticalPanel();
+      card.addStyleName("ode-ProjectCard"); // add your desired style to ya.css, using this class name
 
       nameLabel = new Label(project.getProjectName());
       nameLabel.addClickHandler(new ClickHandler() {
@@ -269,15 +242,59 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
           ode.openYoungAndroidProjectInDesigner(project);
         }
       });
+      commonPanel.addClickHandler(new ClickHandler() {
+        @Override
+        public void onClick(ClickEvent event) {
+          Ode ode = Ode.getInstance();
+          // If the screens are locked, don't take this action. Also
+          // do not open the project if it is in the trash!
+          if (ode.screensLocked() || project.isInTrash()) {
+            return;
+          }
+          ode.openYoungAndroidProjectInDesigner(project);
+        }
+      });
       nameLabel.addStyleName("ode-ProjectNameLabel");
+      
 
       DateTimeFormat dateTimeFormat = DateTimeFormat.getMediumDateTimeFormat();
 
       Date dateCreated = new Date(project.getDateCreated());
       dateCreatedLabel = new Label(dateTimeFormat.format(dateCreated));
+      dateCreatedLabel.addStyleName("ode-ProjectDateLabel");
 
       Date dateModified = new Date(project.getDateModified());
       dateModifiedLabel = new Label(dateTimeFormat.format(dateModified));
+      dateModifiedLabel.addStyleName("ode-ProjectDateLabel");
+
+      Button delBut = new Button("delete");
+      delBut.addStyleName("ode-ProjectCardButton");
+      delBut.addClickHandler(new ClickHandler() {
+        @Override
+        public void onClick(ClickEvent event) {
+          project.moveToTrash();
+          project.deleteFromTrash();
+        }
+      });
+      buttonPanel.add(delBut);
+
+      Button exportButton = new Button("downloading");
+      exportButton.addStyleName("ode-ProjectCardButton");
+      exportButton.addClickHandler(new ClickHandler() {
+        @Override
+        public void onClick(ClickEvent event) {
+          project.exportTheProject();
+        }
+      });
+      buttonPanel.add(exportButton);
+      card.add(nameLabel);
+      card.add(dateCreatedLabel);
+      card.add(dateModifiedLabel);
+      commonPanel.add(card);
+      homeCard.add(commonPanel);
+      homeCard.add(buttonPanel);
+      
+      fp.add(homeCard);
     }
   }
 
@@ -320,45 +337,42 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
       }
       Collections.sort(projects, comparator);
     }
-
-    refreshSortIndicators();
+// I guess you went to some work >?
+    //refreshSortIndicators();
 
     // Refill the table.
-    int previous_rowmax = table.getRowCount() - 1;
-    table.resizeRows(Integer.max(3, previous_rowmax + 1));
+    int previous_rowmax = table.getColumnCount() * table.getRowCount();
+    table.resizeRows(previous_rowmax);
+    // clears all of the existing cells
+    for (int row = 0; row < table.getRowCount(); row++) {
+      for (int column = 0; column < table.getColumnCount(); column++) {
+        table.clearCell(row, column);
+      }
+    }
     int row = 0;
+    int column = 0;
     for (Project project : projects) {
       if (project.isInTrash() == isInTrash) {
-        row++;
-        ProjectWidgets pw = projectWidgets.get(project);
-        if (selectedProjects.contains(project)) {
-          table.getRowFormatter().setStyleName(row, "ode-ProjectRowHighlighted");
-          pw.checkBox.setValue(true);
-        } else {
-          table.getRowFormatter().setStyleName(row, "ode-ProjectRowUnHighlighted");
-          pw.checkBox.setValue(false);
-          table.getRowFormatter().getElement(row).setAttribute("data-exporturl",
+        if(column == 3) {
+          row++;
+          column = 0;
+        }
+        ProjectWidgets pw = projectWidgets.get(project);table.getColumnFormatter().getElement(column).setAttribute("data-exporturl",
               "application/octet-stream:" + project.getProjectName() + ".aia:"
                   + GWT.getModuleBaseURL() + ServerLayout.DOWNLOAD_SERVLET_BASE
                   + ServerLayout.DOWNLOAD_PROJECT_SOURCE + "/" + project.getProjectId());
-          configureDraggable(table.getRowFormatter().getElement(row));
-        }
-        pw.checkBox.setName(String.valueOf(row));
+        configureDraggable(table.getColumnFormatter().getElement(column));
         if (row >= previous_rowmax) {
           table.insertRow(row + 1);
         }
-        table.setWidget(row, 0, pw.checkBox);
-        table.setWidget(row, 1, pw.nameLabel);
-        table.setWidget(row, 2, pw.dateCreatedLabel);
-        table.setWidget(row, 3, pw.dateModifiedLabel);
+        table.setWidget(row, column, pw.fp);
+        if (column < 5) {
+          column++;
+        }
+        //work done ?
       }
     }
-    selectAllCheckBox.setValue(false);
-    table.resizeRows( row + 1);
-
-    if (isInTrash && table.getRowCount() == 1) {
-      Ode.getInstance().createEmptyTrashDialog(true);
-    }
+    table.resizeRows(row + 1);
     Ode.getInstance().getProjectToolbar().updateButtons();
   }
 

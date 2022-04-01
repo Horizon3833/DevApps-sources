@@ -417,6 +417,7 @@ public final class MockForm extends MockContainer {
     phoneWidget.setStylePrimaryName("ode-SimpleMockFormPhonePortrait");
     formWidget = new AbsolutePanel();
     formWidget.setStylePrimaryName("ode-SimpleMockForm");
+    formWidget.setWidth("320px");
     notchPanel = new AbsolutePanel();
     notchPanel.setStylePrimaryName("ode-SimpleMockFormNotch");
     notchPanel.getElement().getStyle().clearPosition();

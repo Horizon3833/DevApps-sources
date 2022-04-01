@@ -32,7 +32,7 @@ public final class PaletteBox extends Box {
    */
   private PaletteBox() {
     super(MESSAGES.paletteBoxCaption(),
-        200,       // height
+        600,       // height
         false,     // minimizable
         false,     // removable
         false,     // startMinimized

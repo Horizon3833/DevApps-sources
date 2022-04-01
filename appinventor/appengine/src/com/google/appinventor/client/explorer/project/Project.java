@@ -14,6 +14,8 @@ import com.google.appinventor.client.tracking.Tracking;
 import com.google.appinventor.shared.rpc.project.ProjectNode;
 import com.google.appinventor.shared.rpc.project.ProjectRootNode;
 import com.google.appinventor.shared.rpc.project.UserProject;
+import com.google.appinventor.client.utils.Downloader;
+import com.google.appinventor.shared.rpc.ServerLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -296,5 +298,13 @@ public final class Project {
     for (ProjectChangeListener listener : copyProjectChangeListeners()) {
       listener.onProjectNodeRemoved(this, node);
     }
+  }
+
+  public void exportTheProject(){
+    Tracking.trackEvent(Tracking.PROJECT_EVENT,
+        Tracking.PROJECT_ACTION_DOWNLOAD_PROJECT_SOURCE_YA, getProjectName());
+
+      Downloader.getInstance().download(ServerLayout.DOWNLOAD_SERVLET_BASE +
+        ServerLayout.DOWNLOAD_PROJECT_SOURCE + "/" + getProjectId());
   }
 }

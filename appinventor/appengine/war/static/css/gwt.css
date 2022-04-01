@@ -12,7 +12,7 @@
  *    }
  */
 
-body, table td, select {
+ body, table td, select {
   font-size: small;
 }
 pre {
@@ -614,6 +614,7 @@ a, a:visited, a:hover {
 
 .gwt-StackPanel {
   border-bottom: 1px solid #bbbbbb;
+  height: calc(100vh + 100px);
 }
 .gwt-StackPanel .gwt-StackPanelItem {
   cursor: pointer;
@@ -990,7 +991,6 @@ a, a:visited, a:hover {
   cursor: pointer;
 }
 .gwt-Tree .gwt-TreeItem-selected {
-  background: #93c2f1 url(../images/hborder.png) repeat-x 0px -1463px;
 }
 .gwt-TreeItem .gwt-RadioButton input,
 .gwt-TreeItem .gwt-CheckBox input {

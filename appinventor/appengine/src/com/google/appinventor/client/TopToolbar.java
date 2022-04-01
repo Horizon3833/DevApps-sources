@@ -149,7 +149,7 @@ public class TopToolbar extends Composite {
      * +----------------------------------------------------------------+
      */
     HorizontalPanel toolbar = new HorizontalPanel();
-    toolbar.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+    toolbar.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
 
     // Should the UI be in read only mode?
     isReadOnly = Ode.getInstance().isReadOnly();
@@ -171,8 +171,11 @@ public class TopToolbar extends Composite {
     toolbar.add(fileDropDown);
     toolbar.add(connectDropDown);
     toolbar.add(buildDropDown);
-    toolbar.add(settingsDropDown);
-    toolbar.add(helpDropDown);
+
+    toolbar.setCellHorizontalAlignment(fileDropDown, HorizontalPanel.ALIGN_RIGHT);
+    toolbar.setCellHorizontalAlignment(connectDropDown, HorizontalPanel.ALIGN_RIGHT);
+    toolbar.setCellHorizontalAlignment(buildDropDown, HorizontalPanel.ALIGN_RIGHT);
+    
 
     //Only if logged in as an admin, add the Admin Button
     if (Ode.getInstance().getUser().getIsAdmin()) {
@@ -210,7 +213,7 @@ public class TopToolbar extends Composite {
 
   private DropDownButton makeButton(String id, String text) {
     DropDownButton button = new DropDownButton(id, text, new ArrayList<DropDownItem>(), false);
-    button.setStyleName("ode-TopPanelButton");
+    button.setStyleName("ode-TopPanelIcons");
     return button;
   }
 

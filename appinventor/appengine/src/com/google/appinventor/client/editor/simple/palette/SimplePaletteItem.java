@@ -59,7 +59,7 @@ public class SimplePaletteItem extends DragSourcePanel {
     image.setStylePrimaryName("ode-SimplePaletteItem-icon");
     panel.add(image);
     panel.setCellHorizontalAlignment(image, HorizontalPanel.ALIGN_LEFT);
-    panel.setCellWidth(image, "30px");
+    panel.setCellWidth(image, "16px");
 
     Label label = new Label(ComponentsTranslation.getComponentName(scd.getName()));
     label.setHorizontalAlignment(Label.ALIGN_LEFT);
@@ -95,10 +95,9 @@ public class SimplePaletteItem extends DragSourcePanel {
    */
   private static void select(Widget paletteItemWidget) {
     if (selectedPaletteItemWidget != null) {
-      selectedPaletteItemWidget.getElement().getStyle().setProperty("backgroundColor", "white");
+      //Does not reutrn anything
     }
     selectedPaletteItemWidget = paletteItemWidget;
-    selectedPaletteItemWidget.getElement().getStyle().setProperty("backgroundColor", "#d2e0a6");
   }
 
   private void addHandlers() {

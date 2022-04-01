@@ -30,7 +30,6 @@ public class StatusPanel extends Composite {
     if (!Strings.isNullOrEmpty(tosUrl)) {
       String appInventorFooter =
           "<a href=\"" + tosUrl + "\" target=\"_blank\">" + MESSAGES.privacyTermsLink() + "</a>";
-      hpanel.add(new HTML(appInventorFooter));
     }
 
     // This shows the git version and the date of the build

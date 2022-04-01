@@ -363,6 +363,7 @@ public abstract class Box extends HandlerPanel {
 
     scrollPanel = new ScrollPanel();
     scrollPanel.setStylePrimaryName("ode-Box-body");
+    scrollPanel.getElement().setAttribute("style", "overflow: none; postition: relative;");
     if (bodyPadding) {
       scrollPanel.addStyleName("ode-Box-body-padding");
     }
